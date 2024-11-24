@@ -1,5 +1,6 @@
 
 
+
 def generate_top_5_words(G, attribute_partition, top_n=5):
     """
     Generate the top n words for each partition in the attribute partition.
@@ -24,3 +25,4 @@ def generate_top_5_words(G, attribute_partition, top_n=5):
                 word_freq[word] = 1
         top_5_words[partition] = sorted(word_freq, key=word_freq.get, reverse=True)[:top_n]
     return top_5_words
+
