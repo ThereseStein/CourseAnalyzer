@@ -1,7 +1,7 @@
 
-
-
 def generate_top_5_words(G, attribute_partition, top_n=5):
+
+
     """
     Generate the top n words for each partition in the attribute partition.
 
@@ -13,6 +13,7 @@ def generate_top_5_words(G, attribute_partition, top_n=5):
     Returns:
     top_5_words: dict
     """
+
     top_5_words = {}
     for partition in attribute_partition:
         nodes = attribute_partition[partition]
