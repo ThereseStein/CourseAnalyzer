@@ -3,6 +3,7 @@ from collections import defaultdict
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer
+import networkx as nx
 
 # Clean text
 def clean_text(text, stop_words):
@@ -52,9 +53,15 @@ def generate_wordcloud(G, communities, stop_words=set()):
         # Generate the word cloud
         wordcloud = WordCloud(width=800, height=400, background_color="white").generate_from_frequencies(aggregated_scores)
         
+        # Get the top 3 most connected courses in the partition
+        node_degrees = [(node, G.degree(node)) for node in communities[partition_id]]
+        top_3_nodes = sorted(node_degrees, key=lambda x: x[1], reverse=True)[:3]
+        top_3_course_names = [G.nodes[node]["course_name"] for node, _ in top_3_nodes]
+        title = "Top 3 Courses: " + ", ".join(top_3_course_names)
+        
         # Display the word cloud
         plt.figure(figsize=(10, 5))
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
-        plt.title(f"Word cloud for Community {partition_id}")
+        plt.title(f"Word cloud for Community {partition_id} - {title}")
         plt.show()
