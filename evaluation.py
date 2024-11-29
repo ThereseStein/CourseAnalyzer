@@ -25,6 +25,7 @@ def generate_wordcloud(G, communities, stop_words=set()):
         communities (dict): A dictionary with partition IDs as keys and lists of nodes as values.
         stop_words (set): A set of stopwords to exclude from the word clouds.
     """
+    
     # Dictionary to store the combined text for each community
     community_texts = defaultdict(list)
     
