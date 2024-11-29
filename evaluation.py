@@ -15,8 +15,7 @@ def clean_text(text, stop_words):
     cleaned_words = [word for word in words if word not in stop_words]
     return cleaned_words
 
-
-def generate_wordcloud(G, communities, stop_words=set()):
+def generate_wordcloud(G, communities, stop_words=set(), max_words=200):
     """
     Generate and display word clouds for each community in the graph.
 
@@ -24,6 +23,7 @@ def generate_wordcloud(G, communities, stop_words=set()):
         G (nx.Graph): The graph containing nodes with text attributes.
         communities (dict): A dictionary with partition IDs as keys and lists of nodes as values.
         stop_words (set): A set of stopwords to exclude from the word clouds.
+        max_words (int): The maximum number of words to include in the word cloud.
     """
     
     # Dictionary to store the combined text for each community
@@ -52,13 +52,13 @@ def generate_wordcloud(G, communities, stop_words=set()):
         aggregated_scores = dict(zip(feature_names, tfidf_scores))
         
         # Generate the word cloud
-        wordcloud = WordCloud(width=800, height=400, background_color="white").generate_from_frequencies(aggregated_scores)
+        wordcloud = WordCloud(width=800, height=400, background_color="white", max_words=max_words).generate_from_frequencies(aggregated_scores)
         
         # Get the top 3 most connected courses in the partition
         node_degrees = [(node, G.degree(node)) for node in communities[partition_id]]
         top_3_nodes = sorted(node_degrees, key=lambda x: x[1], reverse=True)[:3]
-        top_3_course_names = [G.nodes[node]["course_name"] for node, _ in top_3_nodes]
-        title = "Top 3 Courses: " + ", ".join(top_3_course_names)
+        top_3_course_names = [G.nodes[node]["course_title"] for node, _ in top_3_nodes]
+        title = "Top 3 Courses: \n" + "\n".join(top_3_course_names)
         
         # Display the word cloud
         plt.figure(figsize=(10, 5))
