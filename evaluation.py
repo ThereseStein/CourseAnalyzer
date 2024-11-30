@@ -56,13 +56,15 @@ def generate_wordcloud(G, communities, stop_words=set(), max_words=200):
         
         # Get the top 3 most connected courses in the partition
         node_degrees = [(node, G.degree(node)) for node in communities[partition_id]]
-        top_3_nodes = sorted(node_degrees, key=lambda x: x[1], reverse=True)[:3]
+        top_3_nodes = sorted(node_degrees, key=lambda x: x[1], reverse=True)
         top_3_course_names = [G.nodes[node]["course_title"] for node, _ in top_3_nodes]
-        title = "Top 3 Courses: \n" + "\n".join(top_3_course_names)
+        title = "\n Courses: \n " + "\n".join(top_3_course_names)
         
         # Display the word cloud
         plt.figure(figsize=(10, 5))
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
-        plt.title(f"Word cloud for Community {partition_id} - {title}")
+        plt.title(f"Word cloud for Community {partition_id} ")
         plt.show()
+
+        print(title)
