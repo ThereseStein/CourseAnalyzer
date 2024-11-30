@@ -51,8 +51,8 @@ def generate_wordcloud(G, communities, stop_words=set(), max_words=200):
         # Create a dictionary of terms and their aggregated TF-IDF scores
         aggregated_scores = dict(zip(feature_names, tfidf_scores))
         
-        # Generate the word cloud
-        wordcloud = WordCloud(width=800, height=400, background_color="white", max_words=max_words).generate_from_frequencies(aggregated_scores)
+        # Generate the word cloud with a colormap
+        wordcloud = WordCloud(width=800, height=400, background_color="white", max_words=max_words, colormap="gist_heat_r").generate_from_frequencies(aggregated_scores)
         
         # Get the top 3 most connected courses in the partition
         node_degrees = [(node, G.degree(node)) for node in communities[partition_id]]
