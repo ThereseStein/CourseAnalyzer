@@ -4,6 +4,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer
 import networkx as nx
+import numpy as np
 
 # Clean text
 def clean_text(text, stop_words):
@@ -37,6 +38,23 @@ def generate_wordcloud(G, communities, stop_words=set(), max_words=200):
                 cleaned_words = clean_text(text, stop_words)
                 community_texts[partition_id].append(" ".join(cleaned_words))
     
+    
+    # Load image
+    image = plt.imread("silhouette-of-a-person.png")
+    image_gray = np.mean(image, axis=2)
+
+    # Adjust threshold for the silhouette based on grayscale range
+    if np.max(image_gray) > 1:  # If grayscale range is [0, 255]
+        threshold = 128
+    else:  # If grayscale range is [0, 1]
+        threshold = 0.5
+
+    # Create a mask
+    mask = image_gray > threshold  # Boolean mask
+    mask = mask.astype(int)*255  # Convert boolean mask to integers
+
+
+
     # Generate and display word clouds for each community
     for partition_id, documents in community_texts.items():
         # Combine all text documents into a single string
@@ -52,7 +70,7 @@ def generate_wordcloud(G, communities, stop_words=set(), max_words=200):
         aggregated_scores = dict(zip(feature_names, tfidf_scores))
         
         # Generate the word cloud with a colormap
-        wordcloud = WordCloud(width=800, height=400, background_color="white", max_words=max_words, colormap="gist_heat_r").generate_from_frequencies(aggregated_scores)
+        wordcloud = WordCloud(width=800, height=400, background_color="white", max_words=max_words, colormap="gist_heat_r", mask=mask, contour_width=1, contour_color="darkred").generate_from_frequencies(aggregated_scores)
         
         # Get the top 3 most connected courses in the partition
         node_degrees = [(node, G.degree(node)) for node in communities[partition_id]]
